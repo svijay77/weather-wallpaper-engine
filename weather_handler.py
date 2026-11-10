@@ -2,9 +2,6 @@ import sys
 
 from ipinfo import getHandler, Handler
 from pyowm import OWM
-from pyowm.weatherapi30 import weather_manager
-from pyowm.utils import config
-from pyowm.utils import timestamps
 
 from config import Config
 
@@ -13,23 +10,23 @@ class WeatherService:
     ipinfo = None
 
     def __init__(self, config: Config) -> tuple[WeatherManager, Handler]:
-        owm = OWM(config.open_weather_token)
+        owm = OWM(config.OPEN_WEATHER_TOKEN)
         self.weather_manager = owm.weather_manager()
-        self.ipinfo = getHandler(config.ipinfo_token)
+        self.ipinfo = getHandler(config.IP_INFO_TOKEN)
 
         if not self.weather_manager:
             raise WeatherServiceInitError("Could not create WeatherManager")
         if not self.ipinfo:
             raise WeatherServiceInitError("Could not create IPInfoHandler")
 
-    def get_weather_status(self) -> str: 
+    def get_weather(self) -> str: 
         loc_details = self.ipinfo.getDetails().details
         lat, lon = loc_details['loc'].split(",")
         
         obs = self.weather_manager.weather_at_coords(float(lat), float(lon))
 
         if obs:
-            return obs.weather.status
+            return obs.weather
         else:
             raise WeatherServiceStatusError(f"Could not retrieve weather observation for latitude: {lat}, longitude: {lon}")
 
