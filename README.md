@@ -3,15 +3,12 @@ dynamically sets a wallpaper based on time and weather. arose from a need to vie
 
 ## Usage Guide
 
-1. first ensure you have the appropriate API tokens. this script requires two tokens: 
-  &nbsp;&nbsp;&nbsp;&nbsp; - OpenWeather: you can get this token for free from their site [here](https://home.openweathermap.org/api_keys): just make a free account
-  &nbsp;&nbsp;&nbsp;&nbsp; - IP Info: also a free token that you can grab from their [website](https://ipinfo.io/dashboard/lite). still debating if this is necessary cuz i feel like i could grab the location from the system somewhere.
-
+1. first ensure you have the appropriate API tokens. this script requires two tokens:
+   - OpenWeather: you can get this token for free from their site [here](https://home.openweathermap.org/api_keys): just make a free account
+   - IP Info: also a free token that you can grab from their [website](https://ipinfo.io/dashboard/lite). still debating if this is necessary cuz i feel like i could grab the location from the system somewhere.
 2. next, you need to make sure you have the latest Python version installed and pip, and then install all the required libraries in `requirements.txt` with `pip install -r requirements.txt`.
-
 3. after those are done: there are a couple environment variables you need to set. 
 **note**: still a wip if i read these config vars via system environment, a config JSON, or as CLI args. for now its pulling from your environment
-
 
 | Variable | Description |
 | --- | --- |
@@ -22,7 +19,9 @@ dynamically sets a wallpaper based on time and weather. arose from a need to vie
 | WALLPAPER_DIR | the absolute path to the folder storing all your beautiful wallpapers |
 
 
-after all this is set, just make sure you give necessary permissions to the python script and execute it via `py -m main`. currently this will return the *hopefully* correct path to the wallpaper based on time and day. right now it splits into dawn, day, dusk, and night, with clear, cloudy, rainy, and sunny splits within day and night, and just dawn and dusk wallpapers. of course, i'm thinking about splitting it further within dawn and dusk but i couldn't find any weather_dawn/dusk wallpapers i liked lol so i skipped it for now.
+after all this is set, just make sure you give Windows necessary permissions for the python script and execute it via `py -m main`. 
+
+currently this only returns the *hopefully* correct path to the wallpaper based on time and day. right now it splits into dawn, day, dusk, and night, with clear, cloudy, rainy, and sunny splits within day and night, and just dawn and dusk wallpapers. of course, i'm thinking about splitting it further within dawn and dusk but i couldn't find any weather_dawn/dusk wallpapers i liked lol so i skipped it for now.
 
 ## TODO
 ### base functionality
