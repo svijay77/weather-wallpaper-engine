@@ -12,13 +12,15 @@ dynamically sets a wallpaper based on time and weather. arose from a need to vie
 3. after those are done: there are a couple environment variables you need to set. 
 **note**: still a wip if i read these config vars via system environment, a config JSON, or as CLI args. for now its pulling from your environment
 
+
 | Variable | Description |
-| --- | --- | --- |
+| --- | --- |
 | WEATHER_TOKEN | the weather token u pulled from OpenWeather |
 | IPINFO_TOKEN | the token pulled from the IP info API |
 | WINDOWS | if you're gonna use the native windows system to set the wallpaper |
 | LIVELYCU | if you're gonna use Lively to set the wallpaper |
 | WALLPAPER_DIR | the absolute path to the folder storing all your beautiful wallpapers |
+
 
 after all this is set, just make sure you give necessary permissions to the python script and execute it via py -m main. 
 
