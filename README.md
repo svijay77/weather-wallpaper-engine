@@ -14,8 +14,8 @@ dynamically sets a wallpaper based on time and weather. arose from a need to vie
 | --- | --- |
 | WEATHER_TOKEN | the weather token u pulled from OpenWeather |
 | IPINFO_TOKEN | the token pulled from the IP info API |
-| WINDOWS | if you're gonna use the native windows system to set the wallpaper |
-| LIVELYCU | if you're gonna use Lively to set the wallpaper |
+| WINDOWS | if you're gonna use the native windows system to set the wallpaper (good if u only have static wallpapers) |
+| LIVELYCU | if you're gonna use Lively to set the wallpaper (recommended if you have animated/live wallpapers) |
 | WALLPAPER_DIR | the absolute path to the folder storing all your beautiful wallpapers |
 
 
