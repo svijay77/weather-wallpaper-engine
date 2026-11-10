@@ -30,5 +30,6 @@ currently this only returns the *hopefully* correct path to the wallpaper based 
 - look into doing the same for Mac?
 
 ### user experience
-- look into loading wallpapers via GUI?
+- look into loading wallpapers via GUI (customTkinter)?
+- stretch: ML model that classifies uploaded wallpapers automatically into weather and time splits
 
