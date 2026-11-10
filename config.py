@@ -13,15 +13,15 @@ class Config:
 
     def __init__(self):
         # TODO: pull config from JSON or CLI args? probably json tbh
-        self.OPEN_WEATHER_TOKEN = os.environ['WEATHER_TOKEN'] 
-        self.IP_INFO_TOKEN = os.environ['IPINFO_TOKEN'] 
-        self.IS_WINDOWS = os.environ['WINDOWS'].strip().lower() == "true"
-        self.IS_LIVELY_CU = os.environ['LIVELYCU'].strip().lower() == "true"
-        self.WALLPAPER_DIR = os.environ['WALLPAPER_DIR']
+        self.OPEN_WEATHER_TOKEN = os.environ.get('WEATHER_TOKEN') 
+        self.IP_INFO_TOKEN = os.environ.get('IPINFO_TOKEN') 
+        self.IS_WINDOWS = os.environ.get('WINDOWS').strip().lower() == "true" if os.environ.get('WINDOWS') else None
+        self.IS_LIVELY_CU = os.environ.get('LIVELYCU').strip().lower() == "true" if os.environ.get('LIVELYCU') else None
+        self.WALLPAPER_DIR = os.environ.get('WALLPAPER_DIR')
 
         # verify tokens are set
         if not self.OPEN_WEATHER_TOKEN:
-                    raise ConfigError("OpenWeather API token must be set")
+            raise ConfigError("OpenWeather API token must be set")
         if not self.IP_INFO_TOKEN:
             raise ConfigError("IPInfo token must be set")
 
@@ -31,7 +31,7 @@ class Config:
 
         # make sure there's a valid folder with wallpaper images
         if not self.WALLPAPER_DIR:
-             raise ConfigError("wallpaper directory must be set and valid")
+            raise ConfigError("wallpaper directory must be set and valid")
 
 class ConfigError(Exception):
     pass

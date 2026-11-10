@@ -48,18 +48,18 @@ def app() -> int:
         wallpaper_service = DynamicWallpaperService(config)
 
         # grab weather status and pull appropriate wallpaper
-        status = weather_service.get_weather_status()
+        status = weather_service.get_weather()
         print(status)
 
         # select appropriate path to wallpaper
         wallpaper_filename = get_wallpaper(status)
-        full_path = config.WALLPAPER_DIR + wallpaper_filename
-
+        full_path = config.WALLPAPER_DIR + "/" + wallpaper_filename
+        print(full_path)
         # execute setting wallpaper based on cli arg
-        if (config.is_windows):
+        if (config.IS_WINDOWS):
             # set wallpaper via native windows
             pass
-        elif (config.is_livelycu):
+        elif (config.IS_LIVELY_CU):
             # set wallpaper via Lively CLI utility
             pass
         return 0

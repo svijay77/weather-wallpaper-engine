@@ -2,6 +2,7 @@ import sys
 
 from ipinfo import getHandler, Handler
 from pyowm import OWM
+from pyowm.weatherapi30.weather_manager import WeatherManager
 
 from config import Config
 
