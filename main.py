@@ -6,6 +6,7 @@ from pyowm.weatherapi30.weather import Weather
 
 from config import Config, ConfigError
 from weather_handler import WeatherService, WeatherServiceInitError, WeatherServiceStatusError
+from wallpaper_handler import DynamicWallpaperService
 
 def match_weather(status: str, time_of_day: str):
     # random choice between all wallpapers that follow [status]_day[0-9].[mp4/gif]
@@ -39,11 +40,12 @@ def get_wallpaper(weather: Weather) -> str:
     elif current_time > sunset and current_time < sunrise:
         return match_weather(status, "night")
 
-def main():
+def app() -> int:
     try:
         # initialize services
         config = Config()
         weather_service = WeatherService(config)
+        wallpaper_service = DynamicWallpaperService(config)
 
         # grab weather status and pull appropriate wallpaper
         status = weather_service.get_weather_status()
@@ -51,7 +53,7 @@ def main():
 
         # select appropriate path to wallpaper
         wallpaper_filename = get_wallpaper(status)
-        full_path = BASE_PATH + wallpaper_filename
+        full_path = config.WALLPAPER_DIR + wallpaper_filename
 
         # execute setting wallpaper based on cli arg
         if (config.is_windows):
@@ -60,17 +62,22 @@ def main():
         elif (config.is_livelycu):
             # set wallpaper via Lively CLI utility
             pass
+        return 0
 
     except ConfigError as e:
         print(f"[Config]: please fix your configuration. {e}")
-        sys.exit(1)
+        return 1
 
     except WeatherServiceInitError as e:
         print(f"[WeatherService] WeatherService could not be initialized. {e}")
-        sys.exit(1)
+        return 1
 
     except WeatherServiceStatusError as e:
         print(f"[WeatherService] weather status could not be fetched. {e}")
+        return 0
+
+def main():
+    sys.exit(app())
 
 if __name__ == "__main__":
     main()
