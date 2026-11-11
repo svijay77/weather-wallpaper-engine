@@ -1,4 +1,4 @@
-import os
+from dotenv import dotenv_values
 
 class Config:
     OPEN_WEATHER_TOKEN: str = None # pull this token for free from https://openweathermap.org/ 
@@ -12,12 +12,13 @@ class Config:
     WALLPAPER_DIR: str = None # the absolute path to the folder where all your wallpapers are saved
 
     def __init__(self):
+        cfg = dotenv_values(".env")
         # TODO: pull config from JSON or CLI args? probably json tbh
-        self.OPEN_WEATHER_TOKEN = os.environ.get('WEATHER_TOKEN') 
-        self.IP_INFO_TOKEN = os.environ.get('IPINFO_TOKEN') 
-        self.IS_WINDOWS = os.environ.get('WINDOWS').strip().lower() == "true" if os.environ.get('WINDOWS') else None
-        self.IS_LIVELY_CU = os.environ.get('LIVELYCU').strip().lower() == "true" if os.environ.get('LIVELYCU') else None
-        self.WALLPAPER_DIR = os.environ.get('WALLPAPER_DIR')
+        self.OPEN_WEATHER_TOKEN = cfg.get('WEATHER_TOKEN') 
+        self.IP_INFO_TOKEN = cfg.get('IPINFO_TOKEN') 
+        self.IS_WINDOWS = cfg.get('WINDOWS').strip().lower() == "true" if cfg.get('WINDOWS') else None
+        self.IS_LIVELY_CU = cfg.get('LIVELYCU').strip().lower() == "true" if cfg.get('LIVELYCU') else None
+        self.WALLPAPER_DIR = cfg.get('WALLPAPER_DIR')
 
         # verify tokens are set
         if not self.OPEN_WEATHER_TOKEN:
