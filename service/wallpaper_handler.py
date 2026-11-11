@@ -1,96 +1,70 @@
 import ctypes
-from datetime import timedelta
-from enum import StrEnum
+import logging
 from pathlib import Path
-from random import choice
-from subprocess import runCommand
-
-from pyowm.weatherapi30.weather import Weather
+import random
+from subprocess import run
 
 from config.config import Config
+from service.weather_handler import WeatherSnapshot
+
+logger = logging.getLogger(__name__)
 
 # constants
 SPI_SETDESKWALLPAPER = 20
-
-class TimeOfDay(StrEnum):
-    DAWN = 'dawn'
-    DUSK = 'dusk'
-    DAY = 'day'
-    NIGHT = 'night'
 
 WINDOW_EXTS = {'.png', '.jpg', '.jpeg', '.bmp'}
 LIVELY_EXTS = {'.bmp','.webp','.png','.jpg','.jpeg','.mp4','.webm','.gif','.mkv','.avi','.mov','.wmv'}
 
 class DynamicWallpaperService:
-    weather: Weather = None
-    config: Config = None
-    allowed_exts: set[str] = None
-
-    def __init__(self, weather: Weather, config: Config):
-        self.weather = weather
-        self.config = config
+    def __init__(self, config: Config):
+        self.config: Config = config
 
         if config.WALLPAPER_SYSTEM == 'windows':
-            allowed_exts = WINDOW_EXTS
+            self.allowed_exts: set[str] = WINDOW_EXTS
         elif config.WALLPAPER_SYSTEM == 'lively':
-            allowed_exts = LIVELY_EXTS
+            self.allowed_exts: set[str] = LIVELY_EXTS
 
-    def set_wallpaper(self):
-        filename = str(self.pick_wallpaper())
-        
+    def set_wallpaper(self, weather: WeatherSnapshot):
+        file: Path = self.pick_wallpaper(weather)
+        logger.info(f"successfully picked {str(file)} as the new wallpaper")
+
+        logger.info(f"setting {str(file)} as wallpaper now...")
+
         match self.config.WALLPAPER_SYSTEM:
             case 'windows':
-                # execute via windows cmd
-                ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, self.config.WALLPAPER_DIR, 3)
+                logger.info("executing windows cmd...")
+                #ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, str(file), 3)
             case 'lively':
-                runCommand(['setwp', f'--file={filename}']) # TODO: add support for setting wallpapers only on certain monitors? i.e. only on monitor 1 or 2
-            case default:
+                logger.info("executing lively cmd...")
+                #run(['setwp', f'--file={str(file)}']) # TODO: add support for setting wallpapers only on certain monitors? i.e. only on monitor 1 or 2
+            case _:
                 raise DynamicWallpaperServiceError('invalid wallpaper system')
 
-    def pick_wallpaper(self) -> Path:
-        current_time = self.weather.reference_time(timeformat='date').astimezone()
-        sunrise = self.weather.sunrise_time(timeformat='date').astimezone()
-        sunset = self.weather.sunset_time(timeformat='date').astimezone()
-
-        status = self.weather.status.lower()
-        wind_speed = float(self.weather.wind()['speed'])
-
-        time_of_day = None
-
-        if (sunrise - current_time) <= timedelta(minutes=90) and current_time <= sunrise: # dawn = [sunrise - 90, sunrise]
-            time_of_day = TimeOfDay.DAWN
-        elif current_time >= sunset and (current_time - sunset) <= timedelta(minutes=90): # dusk = [sunset, sunset + 90]
-            time_of_day = TimeOfDay.DUSK
-        elif current_time >= sunrise and current_time <= sunset: # day = [sunrise, sunset]
-            time_of_day = TimeOfDay.DAY
-        elif current_time >= sunset or current_time <= sunrise: # night = [0:00, sunrise] U [sunset, 24:00]
-            time_of_day = TimeOfDay.NIGHT
-
-        return choice(self.match_weather(status, wind_speed, time_of_day)) # return one random choice from the list of matching files
-
-    def match_weather(self, status: str, wind_speed: float, time_of_day: str) -> list[Path]:
-        # rain takes prio over wind speeds until i add a thunderstorm category?
-        if status in ['thunderstorm', 'drizzle']: # not exactly the most robust handling of status tbh
-            status = 'rain'
-        elif wind_speed > 15.0: # there's no 'windy' descriptor in the API so i check wind speed
-           status = 'windy'
-
-        return self.get_all_matching_files(time_of_day=time_of_day, status=status) # the issue here is that im gonna have to make sure the directory structure always follows the same statuses available from OWM
-       
-    # returns all wallpapers inside WALLPAPER_DIR/{time_of_day}/{status}/*.[allowed_exts]
-    def get_all_matching_files(self, time_of_day: str, status: str) -> list[Path]:
-        folder = Path(self.config.WALLPAPER_DIR) / time_of_day / status
-
+    def pick_wallpaper(self, weather: WeatherSnapshot) -> Path:
+        # the issue here is that im gonna have to make sure the directory structure always follows the same statuses available from OWM
+        folder = Path(self.config.WALLPAPER_DIR) / weather.time_of_day / weather.status
+        
         # check folder exists
         if not folder.is_dir():
-            raise DynamicWallpaperServiceError(f"wallpaper folder does not exist: {folder}")
+            # if it doesn't exist, use the parent folder
+            logger.warning(f"wallpaper folder does not exist: {folder}")
+            folder = folder.parent
 
-        files = [file for file in folder.iterdir() if file.exists() and file.suffix().lower() in self.allowed_exts] # list comprehension to filter files based on exts
+        file_paths = folder.iterdir()
+        files = []
+
+        # filter to only include files with valid extensions
+        for path in file_paths:
+            if path.is_file() and path.suffix.lower() in self.allowed_exts:
+                files.append(path)
+                logger.info(f"adding file: {str(path)}")
 
         if len(files) < 1:
             raise DynamicWallpaperServiceError("no valid files exist")
-
-        return files
+        elif len(files) == 1:
+            return files[0]
+        
+        return random.choice(files) # return one random choice from the list of matching files
 
 class DynamicWallpaperServiceError(Exception):
     pass
