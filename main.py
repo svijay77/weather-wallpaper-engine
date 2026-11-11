@@ -61,12 +61,6 @@ def app() -> int:
         full_path = config.WALLPAPER_DIR + "/" + wallpaper_filename
         print(full_path)
         # execute setting wallpaper based on cli arg
-        if (config.IS_WINDOWS):
-            # set wallpaper via native windows
-            pass
-        elif (config.IS_LIVELY_CU):
-            # set wallpaper via Lively CLI utility
-            pass
         return 0
 
     except ConfigError as e:
