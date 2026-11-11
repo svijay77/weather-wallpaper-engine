@@ -4,8 +4,8 @@ from pyowm import OWM
 from pyowm.weatherapi30.weather import Weather
 
 from config.config import Config, ConfigError
-from weather_handler import WeatherService, WeatherServiceInitError, WeatherServiceStatusError
-from wallpaper_handler import DynamicWallpaperService, DynamicWallpaperServiceError
+from service.weather_handler import WeatherService, WeatherServiceInitError, WeatherServiceStatusError
+from service.wallpaper_handler import DynamicWallpaperService, DynamicWallpaperServiceError
 
 def app() -> int:
     try:
