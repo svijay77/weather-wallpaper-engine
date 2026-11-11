@@ -1,5 +1,5 @@
 # weather-wallpaper-engine
-dynamically sets a wallpaper based on time and weather. arose from a need to view all my beautiful wallpapers but make them make sense with what i'm seeing outside my window. currently supports native Windows utility or LivelyCU to set the wallpaper, *maybe possibly* will extend to WallpaperEngine idk yet.
+dynamically sets a wallpaper based on time and weather. this arose from a need to view all my beautiful wallpapers but also make them make sense with what i'm seeing outside my window. currently supports native Windows utility or Lively to set the wallpaper, *maybe possibly* will extend to WallpaperEngine idk yet.
 
 ## Usage Guide
 
@@ -7,27 +7,25 @@ dynamically sets a wallpaper based on time and weather. arose from a need to vie
    - OpenWeather: you can get this token for free from their site [here](https://home.openweathermap.org/api_keys): just make a free account
    - IP Info: also a free token that you can grab from their [website](https://ipinfo.io/dashboard/lite). still debating if this is necessary cuz i feel like i could grab the location from the system somewhere.
 2. next, you need to make sure you have the latest Python version installed and pip, and then install all the required libraries in `requirements.txt` with `pip install -r requirements.txt`.
-3. after those are done: there are a couple environment variables you need to set. 
-**note**: still a wip if i read these config vars via system environment, a config JSON, or as CLI args. for now its pulling from your environment
+3. after those are done: there are a couple environment variables you need to set in `config/config.json`.
 
 | Variable | Description |
 | --- | --- |
 | WEATHER_TOKEN | the weather token u pulled from OpenWeather |
 | IPINFO_TOKEN | the token pulled from the IP info API |
-| WINDOWS | if you're gonna use the native windows system to set the wallpaper (good if u only have static wallpapers) |
-| LIVELYCU | if you're gonna use Lively to set the wallpaper (recommended if you have animated/live wallpapers) |
+| WALLPAPER_SYSTEM | either `windows` or `lively`. if u only have static wallpapers (PNG, JPG, BMP) i recommend windows, otherwise lively handles a lot more file types) |
 | WALLPAPER_DIR | the absolute path to the folder storing all your beautiful wallpapers |
-
 
 after all this is set, just make sure you give Windows necessary permissions for the python script and execute it via `py -m main`. 
 
-currently this only returns the *hopefully* correct path to the wallpaper based on time and day. right now it splits into dawn, day, dusk, and night, with clear, cloudy, rainy, and sunny splits within day and night, and just dawn and dusk wallpapers. of course, i'm thinking about splitting it further within dawn and dusk but i couldn't find any weather_dawn/dusk wallpapers i liked lol so i skipped it for now.
+currently this returns the *hopefully* correct path to the wallpaper based on time and day. it supports all combinations of dawn, day, dusk, night x windy, snowy, rain, clear, and clouds.
 
 ## TODO
 ### base functionality
-- hook up execution path via Windows/LivelyCU to actually set wallpaper
 - set up script to run in Windows background
 - look into doing the same for Mac?
+- add graceful handling for setting closest possible wallpaper (i.e. if user doesn't load a dusk/clear wallpaper, to use whatever is in dusk, or whatever is in night/clear etc)
+- get rid of pyOWM and ipInfo libs? swap to lightweight http req client
 
 ### user experience
 - look into loading wallpapers via GUI (customTkinter)?
