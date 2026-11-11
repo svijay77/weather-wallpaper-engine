@@ -1,4 +1,4 @@
-from dotenv import dotenv_values
+import json
 from pathlib import Path
 
 class Config:
@@ -12,8 +12,10 @@ class Config:
     WALLPAPER_DIR: str = None # the absolute path to the folder where all your wallpapers are saved
 
     def __init__(self):
-        cfg = dotenv_values(".env")
-        # TODO: pull config from JSON or CLI args? probably json tbh
+        config_file = Path("config.py")
+        with config_file.open(mode='r', encoding='utf-8') as config:
+            cfg = json.load(config)
+
         self.OPEN_WEATHER_TOKEN = cfg.get('WEATHER_TOKEN') 
         self.IP_INFO_TOKEN = cfg.get('IPINFO_TOKEN') 
         self.WALLPAPER_SYSTEM = cfg.get('WALLPAPER_SYSTEM').strip().lower()

@@ -1,32 +1,25 @@
 import sys
-from datetime import datetime, timedelta
 
 from pyowm import OWM
 from pyowm.weatherapi30.weather import Weather
 
-from config import Config, ConfigError
+from config.config import Config, ConfigError
 from weather_handler import WeatherService, WeatherServiceInitError, WeatherServiceStatusError
-from wallpaper_handler import DynamicWallpaperService
+from wallpaper_handler import DynamicWallpaperService, DynamicWallpaperServiceError
 
 def app() -> int:
     try:
         # initialize services
         config = Config()
         weather_service = WeatherService(config)
-        wallpaper_service = DynamicWallpaperService(config)
 
         # grab weather status and pull appropriate wallpaper
-        status = weather_service.get_weather()
+        weather: Weather = weather_service.get_weather()
 
-        # select appropriate path to wallpaper
-        wallpaper_filename = get_wallpaper(status)
+        wallpaper_service = DynamicWallpaperService(weather, config)
 
-        if not wallpaper_filename:
-            raise FileNotFoundError("could not match wallpaper to weather")
-
-        full_path = config.WALLPAPER_DIR + "/" + wallpaper_filename
-        print(full_path)
-        # execute setting wallpaper based on cli arg
+        # set wallpaper via service
+        wallpaper_service.set_wallpaper()
         return 0
 
     except ConfigError as e:
@@ -41,8 +34,8 @@ def app() -> int:
         print(f"[WeatherService] weather status could not be fetched. {e}")
         return 0
 
-    except FileNotFoundError as e:
-        print(f"[Main] could not set wallpaper. {e}")
+    except DynamicWallpaperServiceError as e:
+        print(f"[DynamicWallpaperService] failed to set wallpaper. {e}")
         return 1
 
 def main():

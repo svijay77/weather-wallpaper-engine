@@ -1,10 +1,9 @@
-import sys
-
 from ipinfo import getHandler, Handler
 from pyowm import OWM
+from pyowm.weatherapi30.weather import Weather
 from pyowm.weatherapi30.weather_manager import WeatherManager
 
-from config import Config
+from config.config import Config
 
 class WeatherService:
     weather_manager = None
@@ -20,7 +19,7 @@ class WeatherService:
         if not self.ipinfo:
             raise WeatherServiceInitError("Could not create IPInfoHandler")
 
-    def get_weather(self) -> str: 
+    def get_weather(self) -> Weather: 
         loc_details = self.ipinfo.getDetails().details
         lat, lon = loc_details['loc'].split(",")
         

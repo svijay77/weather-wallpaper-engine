@@ -7,7 +7,7 @@ from subprocess import runCommand
 
 from pyowm.weatherapi30.weather import Weather
 
-from config import Config
+from config.config import Config
 
 # constants
 SPI_SETDESKWALLPAPER = 20
@@ -45,7 +45,7 @@ class DynamicWallpaperService:
             case 'lively':
                 runCommand(['setwp', f'--file={filename}']) # TODO: add support for setting wallpapers only on certain monitors? i.e. only on monitor 1 or 2
             case default:
-                raise DynamicWallpaperServiceError('cannot set wallpaper due to unknown system')
+                raise DynamicWallpaperServiceError('invalid wallpaper system')
 
     def pick_wallpaper(self) -> Path:
         current_time = self.weather.reference_time(timeformat='date').astimezone()
