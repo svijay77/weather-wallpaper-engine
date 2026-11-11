@@ -2,3 +2,4 @@ wallpapers/*.mp4
 wallpapers/*.gif
 __pycache__/
 .env
+config.json
