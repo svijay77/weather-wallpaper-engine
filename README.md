@@ -18,7 +18,7 @@ dynamically sets a wallpaper based on time and weather. this arose from a need t
 
 after all this is set, just make sure you give Windows necessary permissions for the python script and execute it via `py -m main`. 
 
-currently this returns the *hopefully* correct path to the wallpaper based on time and day. it supports all combinations of dawn, day, dusk, night x windy, snowy, rain, clear, and clouds.
+currently this sets the wallpaper based on time and day. you will have to manually schedule this to run via Windows TaskScheduler. it supports all combinations of dawn, day, dusk, night x windy, snowy, rain, clear, and clouds.
 
 ## TODO
 ### base functionality
