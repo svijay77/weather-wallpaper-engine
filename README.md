@@ -26,6 +26,7 @@ currently this sets the wallpaper based on time and day. you will have to manual
 - look into extending func for MacOS
 - add graceful handling for setting closest possible wallpaper (i.e. if user doesn't load a dusk/clear wallpaper, to use whatever is in dusk, or whatever is in night/clear etc)
 - get rid of pyOWM and ipInfo libs? swap to lightweight http req client
+- flatten wallpaper hierarchy and use a JSON file/SQLiteDB to store file names + tags
 
 ### user experience
 - look into loading wallpapers via GUI (customTkinter)?
