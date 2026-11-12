@@ -15,6 +15,7 @@ dynamically sets a wallpaper based on time and weather. this arose from a need t
 | IPINFO_TOKEN | the token pulled from the IP info API |
 | WALLPAPER_SYSTEM | either `windows` or `lively`. if u only have static wallpapers (PNG, JPG, BMP) i recommend windows, otherwise lively handles a lot more file types) |
 | WALLPAPER_DIR | the absolute path to the folder storing all your beautiful wallpapers |
+| LIVELY_PATH | required if you're using `lively`. the absolute path to the downloaded `Livelycu.exe`. |
 
 after all this is set, just make sure you give Windows necessary permissions for the python script and execute it via `py -m main`. 
 
