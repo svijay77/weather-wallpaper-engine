@@ -31,4 +31,5 @@ currently this sets the wallpaper based on time and day. you will have to manual
 ### user experience
 - look into loading wallpapers via GUI (customTkinter)?
 - stretch: ML model that classifies uploaded wallpapers automatically into weather and time splits
+- add button to setup UI to automatically register script in Windows task scheduler
 
