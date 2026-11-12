@@ -13,9 +13,9 @@ class Config:
     WALLPAPER_SYSTEM: str
 
     WALLPAPER_DIR: Path # the absolute path to the folder where all your wallpapers are saved
+    LIVELY_PATH: Path
 
     def __init__(self):
-        logger.info("hello")
         config_file = Path("./config/config.json")
 
         try:
@@ -32,6 +32,7 @@ class Config:
         self.IP_INFO_TOKEN = cfg.get('IPINFO_TOKEN') 
         self.WALLPAPER_SYSTEM = cfg.get('WALLPAPER_SYSTEM').strip().lower() if cfg.get('WALLPAPER_SYSTEM') else None
         self.WALLPAPER_DIR = Path(cfg.get('WALLPAPER_DIR'))
+        self.LIVELY_PATH = Path(cfg.get("LIVELY_PATH"))
   
         # verify tokens are set
         if not self.OPEN_WEATHER_TOKEN:
@@ -48,9 +49,12 @@ class Config:
             raise ConfigError("wallpaper directory must be set")
 
         # ensure that it is a valid folder
-        if not Path(self.WALLPAPER_DIR).is_dir():
+        if not self.WALLPAPER_DIR.is_dir():
             raise ConfigError("wallpaper directory must be valid")
 
+        # ensure there's a valid path to the lively executable
+        if not self.LIVELY_PATH.is_file():
+            raise ConfigError("lively.exe path must be valid")
 
 class ConfigError(Exception):
     pass

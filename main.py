@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 def app() -> int:
     try:
-        logger.info("hello")
         # initialize services
         config = Config()
         weather_service = WeatherService(config)

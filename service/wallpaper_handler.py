@@ -2,7 +2,7 @@ import ctypes
 import logging
 from pathlib import Path
 import random
-from subprocess import run
+import subprocess
 
 from config.config import Config
 from service.weather_handler import WeatherSnapshot
@@ -36,7 +36,7 @@ class DynamicWallpaperService:
                 #ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, str(file), 3)
             case 'lively':
                 logger.info("executing lively cmd...")
-                #run(['setwp', f'--file={str(file)}']) # TODO: add support for setting wallpapers only on certain monitors? i.e. only on monitor 1 or 2
+                self.run_command(['setwp', f'--file={str(file)}']) # TODO: add support for setting wallpapers only on certain monitors? i.e. only on monitor 1 or 2
             case _:
                 raise DynamicWallpaperServiceError('invalid wallpaper system')
 
@@ -57,7 +57,6 @@ class DynamicWallpaperService:
         for path in file_paths:
             if path.is_file() and path.suffix.lower() in self.allowed_exts:
                 files.append(path)
-                logger.info(f"adding file: {str(path)}")
 
         if len(files) < 1:
             raise DynamicWallpaperServiceError("no valid files exist")
@@ -65,6 +64,11 @@ class DynamicWallpaperService:
             return files[0]
         
         return random.choice(files) # return one random choice from the list of matching files
+    
+    def run_command(self, args):
+        startup_info = subprocess.STARTUPINFO()
+        startup_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        subprocess.run([self.config.LIVELY_PATH] + args, startupinfo=startup_info)
 
 class DynamicWallpaperServiceError(Exception):
     pass
