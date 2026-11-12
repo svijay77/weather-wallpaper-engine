@@ -53,8 +53,8 @@ class Config:
             raise ConfigError("wallpaper directory must be valid")
 
         # ensure there's a valid path to the lively executable
-        if not self.LIVELY_PATH.is_file():
-            raise ConfigError("lively.exe path must be valid")
+        if self.WALLPAPER_SYSTEM == 'lively' and not self.LIVELY_PATH.is_file():
+            raise ConfigError("lively.exe path must be set if using lively")
 
 class ConfigError(Exception):
     pass
